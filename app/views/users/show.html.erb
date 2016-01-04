@@ -1,10 +1,12 @@
 <div class="row">
 <p id="notice"><%= notice %></p>
 </div>
-<% if @current_user.id == @user.id %>
+<% if @current_user %>
 <div class="row">
+  <% if session[:user_id] == @user.id %>
     <%= link_to 'Destroy', @user, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-danger col-md-1 pull-right" %>
     <%= link_to 'Edit', edit_user_path(@user), class: "btn btn-warning col-md-1 pull-right" %>
+  <% end %>
 </div>
 <% end %>
 <div class="row">
