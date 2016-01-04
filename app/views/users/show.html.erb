@@ -1,7 +1,7 @@
 <div class="row">
 <p id="notice"><%= notice %></p>
 </div>
-<% if @current_user %>
+<% if @current_user.id == @user.id %>
 <div class="row">
     <%= link_to 'Destroy', @user, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-danger col-md-1 pull-right" %>
     <%= link_to 'Edit', edit_user_path(@user), class: "btn btn-warning col-md-1 pull-right" %>
