@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     respond_to do |format|
-      if @current_user.id != @user.id #session[:user_id]
+      if @current_user.id != @user.id
         format.html { redirect_to @user, notice: '他のユーザの情報は変更できません.' }
         format.json { render :show, status: :created, location: @user }
       else
@@ -63,10 +63,16 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    @user.destroy
     respond_to do |format|
-      format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
-      format.json { head :no_content }
+      if @current_user.id == @user.id
+        @user.destroy
+        format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to @user, notice: '他のユーザを削除することは変更できません.' }
+        format.json { render :show, status: :created, location: @user }
+      end
+
     end
   end
 
