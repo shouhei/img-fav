@@ -20,6 +20,14 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    respond_to do |format|
+      if @current_user.id != @user.id #session[:user_id]
+        format.html { redirect_to @user, notice: '他のユーザの情報は変更できません.' }
+        format.json { render :show, status: :created, location: @user }
+      else
+        format.html{ render :edit }
+      end
+    end
   end
 
   # POST /users
