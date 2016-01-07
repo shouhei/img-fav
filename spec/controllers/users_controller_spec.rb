@@ -82,7 +82,7 @@ describe UsersController do
       end
     end
     describe "DELETE destroy" do
-      it "destroys the requested user" do
+      it "destroys the requested as current_user" do
         expect{
           delete :destroy, id: @user
         }.to change(User, :count).by(-1)
@@ -90,6 +90,12 @@ describe UsersController do
       it "redirects to the users list" do
         delete :destroy, id: @user
         expect(response).to redirect_to users_url
+      end
+      it "destroys the requested as no current_user" do
+        #current_userじゃないidをdeleteするとredirectする
+        @user = FactoryGirl.create(:user, name: "Hoge")
+        delete :destroy, id: @user
+        expect(response).to redirect_to user_path(assigns[:user])
       end
     end
     describe "PUT update" do
