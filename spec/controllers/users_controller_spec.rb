@@ -70,9 +70,15 @@ describe UsersController do
       session[:user_id] = @user.id
     end
     describe "GET edit" do
-      it "assigns the requested user as @user" do
+      it "assigns the requested user as @current_user" do
         get :edit, id: @user
         expect(assigns(:user)).to eq @user
+      end
+      it "assigns the requested user as no current_user" do
+        #current_userじゃないidをgetするとredirectする
+        @user = FactoryGirl.create(:user, name: "Hoge")
+        get :edit, id: @user
+        expect(response).to redirect_to user_path(assigns[:user])
       end
     end
     describe "DELETE destroy" do
