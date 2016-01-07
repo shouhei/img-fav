@@ -20,6 +20,14 @@ class ImagesController < ApplicationController
 
   # GET /images/1/edit
   def edit
+    respond_to do |format|
+      if @current_user.id != @image.user_id
+        format.html { redirect_to @image, notice: '他のユーザの情報は変更できません.' }
+        format.json { render :show, status: :created, location: @image }
+      else
+        format.html{ render :edit }
+      end
+    end
   end
 
   # POST /images
@@ -42,13 +50,19 @@ class ImagesController < ApplicationController
   # PATCH/PUT /images/1.json
   def update
     respond_to do |format|
-      if @image.update(image_params)
-        format.html { redirect_to @image, notice: 'Image was successfully updated.' }
-        format.json { render :show, status: :ok, location: @image }
+      if @current_user.id != @image.user_id
+        format.html { redirect_to @image, notice: '他のユーザの情報は変更できません.' }
+        format.json { render :show, status: :created, location: @image }
       else
-        format.html { render :edit }
-        format.json { render json: @image.errors, status: :unprocessable_entity }
+        if @image.update(image_params)
+          format.html { redirect_to @image, notice: 'Image was successfully updated.' }
+          format.json { render :show, status: :ok, location: @image }
+        else
+          format.html { render :edit }
+          format.json { render json: @image.errors, status: :unprocessable_entity }
+        end
       end
+
     end
   end
 
