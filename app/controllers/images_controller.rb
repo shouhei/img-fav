@@ -62,7 +62,7 @@ class ImagesController < ApplicationController
           format.json { head :no_content }
         end
     else
-        redirect_to images_path, notice: 'faild'
+        redirect_to image_url, notice: 'faild'
     end
   end
 
