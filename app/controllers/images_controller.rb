@@ -55,7 +55,7 @@ class ImagesController < ApplicationController
   # DELETE /images/1
   # DELETE /images/1.json
   def destroy
-    if @image.user == @current_user
+    if @image.user.id == @current_user.id
         @image.destroy
         respond_to do |format|
           format.html { redirect_to images_url, notice: 'Image was successfully destroyed.' }
