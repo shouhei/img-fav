@@ -15,8 +15,9 @@ describe ImagesController do
   end
   context "user login" do
     before :each do
-      @user = FactoryGirl.create(:user)
+      @user = FactoryGirl.create(:user, name: "Fuga")
       session[:user_id] = @user.id
+      @image = FactoryGirl.create(:image, user_id: @user.id)
     end
     describe "GET new" do
       it "assigns the new image as @image" do
@@ -25,6 +26,16 @@ describe ImagesController do
       end
     end
     describe "GET edit" do
+      it "assigns the requested user as @current_user" do
+        get :edit, id: @image
+        expect(assigns[:image].user_id).to eq session[:user_id]
+      end
+      it "assigns the requested user as no current_user" do
+        #current_userじゃないidをgetするとredirectする
+        @image = FactoryGirl.create(:image)
+        get :edit, id: @image
+        expect(response).to redirect_to image_path(assigns[:image])
+      end
     end
     context "with valid value" do
       describe "POST create" do
@@ -35,12 +46,17 @@ describe ImagesController do
         end
       end
       describe "PUT update" do
-        it "update image" do
-          image = FactoryGirl.create(:image)
+        it "update my image" do
+          image = FactoryGirl.create(:image,  user_id: @user.id)
           before_title = image.title
           put :update, id: image.id, image: FactoryGirl.attributes_for(:image, title:"new title")
           image.reload
           expect(before_title).to_not eq image.title
+        end
+        it "does not update other image" do
+          image = FactoryGirl.create(:image)
+          put :update, id: image.id, image: FactoryGirl.attributes_for(:image, title:"new title")
+          expect(response).to redirect_to image_path(assigns[:image])
         end
       end
     end
