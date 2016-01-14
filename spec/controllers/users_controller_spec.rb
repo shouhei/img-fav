@@ -28,11 +28,19 @@ describe UsersController do
     end
   end
   describe "GET show" do
-    it "assigns the requested user as @user" do
-      user = FactoryGirl.create(:user)
-      get :show, id: user
-      expect(assigns(:user)).to eq user
+    before :each do
+      @user = FactoryGirl.create(:user)
     end
+    it "assigns the requested user as @user" do
+      get :show, id: @user
+      expect(assigns(:user)).to eq @user
+    end
+    it "assigns the images of @user as @images" do
+      #{image = FactoryGirl.create(:image,  user_id: @user.id)
+      #get :show, id: @user
+      #expect(assigns[:images].user_id).to eq @user.id}"
+    end
+
   end
   describe "GET new" do
     it "assigns a new user as @user" do
