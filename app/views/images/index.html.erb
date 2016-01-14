@@ -9,9 +9,7 @@
   <thead>
     <tr>
         <th>Title</th>
-        <!--
         <th>User</th>
-         -->
         <th>Image</th>
         <th>myStatus</th>
         <th>Fav</th>
@@ -23,9 +21,7 @@
     <% @images.each do |image| %>
       <tr>
         <td><%= image.title %></td>
-        <!--
-        <td><%#= image.user_name %></td>
-        -->
+        <td><%= image.user.name %></td>
         <td><%= image_tag(image.authenticated_image_url(:thumb)) if image.data.present? %></td>
         <td>
             <% if @current_user && !@current_user.favorites.select{|img| img.image_id == image.id}.empty? %>
