@@ -23,7 +23,7 @@
       <tr>
         <td><%= image.title %></td>
         <td><%= image.user.name %></td>
-        <td><%= image_tag(image.authenticated_image_url(:thumb)) if image.data.present? %></td>
+        <td><%= link_to_if(image.data.present?, image_tag(image.authenticated_image_url(:thumb),{:border => '0', :alt => image.title} ),image, class: "btn btn-primary") %></td>
         <td>
             <% if @current_user && !@current_user.favorites.select{|img| img.image_id == image.id}.empty? %>
                 favorite
