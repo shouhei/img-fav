@@ -18,6 +18,7 @@
   </thead>
 
   <tbody>
+  <% if @images != nil %>
     <% @images.each do |image| %>
       <tr>
         <td><%= image.title %></td>
@@ -33,5 +34,6 @@
         <td><%= link_to 'Show', image, class: "btn btn-primary" %></td>
       </tr>
     <% end %>
+  <% end %>
   </tbody>
 </table>
