@@ -36,7 +36,7 @@ describe ImagesController do
       end
       describe "PUT update" do
         it "update image" do
-          image = FactoryGirl.create(:image)
+          image = FactoryGirl.create(:image, user_id: @user.id)
           before_title = image.title
           put :update, id: image.id, image: FactoryGirl.attributes_for(:image, title:"new title")
           image.reload
@@ -46,7 +46,7 @@ describe ImagesController do
     end
     describe "DELETE destroy" do
       it "delete image" do
-        image = FactoryGirl.create(:image)
+        image = FactoryGirl.create(:image, user_id: @user.id)
         expect{
           delete :destroy, id: image
         }.to change(Image, :count).by(-1)
