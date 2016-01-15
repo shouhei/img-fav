@@ -93,6 +93,11 @@ describe UsersController do
           @user.reload
           expect(@user.name).to eq "Hoge"
         end
+        it "other_user update" do
+            other_user = FactoryGirl.create(:user, name: "Hoge")
+            put :update, id: other_user, user: FactoryGirl.attributes_for(:user, name: "Daison")
+            expect(response).to redirect_to users_url
+        end
         it "redirects to the user" do
           put :update, id: @user, user: FactoryGirl.attributes_for(:user)
           expect(response).to redirect_to @user
