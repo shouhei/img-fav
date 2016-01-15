@@ -58,6 +58,12 @@ describe ImagesController do
           delete :destroy, id: image
         }.to change(Image, :count).by(-1)
       end
+      it "other user destroy" do
+         other_user = FactoryGirl.create(:user)
+         other_image = FactoryGirl.create(:image, user_id: other_user.id)
+         delete :destroy, id: other_image
+         expect(response).to redirect_to images_path
+      end
     end
   end
   context "user logout" do
