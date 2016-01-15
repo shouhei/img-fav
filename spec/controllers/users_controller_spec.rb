@@ -81,6 +81,11 @@ describe UsersController do
           delete :destroy, id: @user
         }.to change(User, :count).by(-1)
       end
+      it "other user destory " do
+          other_user = FactoryGirl.create(:user, name: "Hoge")
+          delete :destroy, id: other_user
+          expect(response).to redirect_to users_url
+      end
       it "redirects to the users list" do
         delete :destroy, id: @user
         expect(response).to redirect_to users_url
