@@ -81,6 +81,11 @@ describe UsersController do
           delete :destroy, id: @user
         }.to change(User, :count).by(-1)
       end
+      it "other user destory " do
+          other_user = FactoryGirl.create(:user, name: "Hoge")
+          delete :destroy, id: other_user
+          expect(response).to redirect_to users_url
+      end
       it "redirects to the users list" do
         delete :destroy, id: @user
         expect(response).to redirect_to users_url
@@ -92,6 +97,11 @@ describe UsersController do
           put :update, id: @user, user: FactoryGirl.attributes_for(:user, name: "Hoge")
           @user.reload
           expect(@user.name).to eq "Hoge"
+        end
+        it "other_user update" do
+            other_user = FactoryGirl.create(:user, name: "Hoge")
+            put :update, id: other_user, user: FactoryGirl.attributes_for(:user, name: "Daison")
+            expect(response).to redirect_to users_url
         end
         it "redirects to the user" do
           put :update, id: @user, user: FactoryGirl.attributes_for(:user)

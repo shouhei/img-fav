@@ -36,20 +36,33 @@ describe ImagesController do
       end
       describe "PUT update" do
         it "update image" do
-          image = FactoryGirl.create(:image)
+          image = FactoryGirl.create(:image, user_id: @user.id)
           before_title = image.title
           put :update, id: image.id, image: FactoryGirl.attributes_for(:image, title:"new title")
           image.reload
           expect(before_title).to_not eq image.title
         end
       end
+        it "other user update image" do
+          other_user = FactoryGirl.create(:user)
+          image = FactoryGirl.create(:image, user_id:other_user.id)
+          put :update, id: image.id, image: FactoryGirl.attributes_for(:image, title:"new title")
+          image.reload
+          expect(response).to redirect_to images_path
+        end
     end
     describe "DELETE destroy" do
       it "delete image" do
-        image = FactoryGirl.create(:image)
+        image = FactoryGirl.create(:image, user_id: @user.id)
         expect{
           delete :destroy, id: image
         }.to change(Image, :count).by(-1)
+      end
+      it "other user destroy" do
+         other_user = FactoryGirl.create(:user)
+         other_image = FactoryGirl.create(:image, user_id: other_user.id)
+         delete :destroy, id: other_image
+         expect(response).to redirect_to images_path
       end
     end
   end
