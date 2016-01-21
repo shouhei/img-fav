@@ -28,11 +28,19 @@ describe UsersController do
     end
   end
   describe "GET show" do
-    it "assigns the requested user as @user" do
-      user = FactoryGirl.create(:user)
-      get :show, id: user
-      expect(assigns(:user)).to eq user
+    before :each do
+      @user = FactoryGirl.create(:user)
     end
+    it "assigns the requested user as @user" do
+      get :show, id: @user
+      expect(assigns(:user)).to eq @user
+    end
+    it "assigns the images of @user as @images" do
+      #{image = FactoryGirl.create(:image,  user_id: @user.id)
+      #get :show, id: @user
+      #expect(assigns[:images].user_id).to eq @user.id}"
+    end
+
   end
   describe "GET new" do
     it "assigns a new user as @user" do
@@ -70,13 +78,19 @@ describe UsersController do
       session[:user_id] = @user.id
     end
     describe "GET edit" do
-      it "assigns the requested user as @user" do
+      it "assigns the requested user as @current_user" do
         get :edit, id: @user
         expect(assigns(:user)).to eq @user
       end
+      it "assigns the requested user as no current_user" do
+        #current_userじゃないidをgetするとredirectする
+        @user = FactoryGirl.create(:user, name: "Hoge")
+        get :edit, id: @user
+        expect(response).to redirect_to user_path(assigns[:user])
+      end
     end
     describe "DELETE destroy" do
-      it "destroys the requested user" do
+      it "destroys the requested as current_user" do
         expect{
           delete :destroy, id: @user
         }.to change(User, :count).by(-1)
@@ -84,6 +98,12 @@ describe UsersController do
       it "redirects to the users list" do
         delete :destroy, id: @user
         expect(response).to redirect_to users_url
+      end
+      it "destroys the requested as no current_user" do
+        #current_userじゃないidをdeleteするとredirectする
+        @user = FactoryGirl.create(:user, name: "Hoge")
+        delete :destroy, id: @user
+        expect(response).to redirect_to user_path(assigns[:user])
       end
     end
     describe "PUT update" do

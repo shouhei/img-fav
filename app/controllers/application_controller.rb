@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :set_login_user
   protected
   def set_login_user
-    @current_user = User.find_by(id: session[:user_id]) if session[:user_id]
+    @current_user = User.find_by(id: session[:user_id]) if session[:user_id] #後置のif if以下がtrue→if前をやる
   end
   def login?
     if !session.has_key? :user_id

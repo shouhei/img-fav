@@ -11,6 +11,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    @images = @user.images.all
   end
 
   # GET /users/new
@@ -20,6 +21,14 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    respond_to do |format|
+      if @current_user.id != @user.id
+        format.html { redirect_to @user, notice: '他のユーザの情報は変更できません.' }
+        format.json { render :show, status: :created, location: @user }
+      else
+        format.html{ render :edit }
+      end
+    end
   end
 
   # POST /users
@@ -42,23 +51,35 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def update
     respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
+      if @current_user.id != @user.id
+        format.html { redirect_to @user, notice: '他のユーザの情報は変更できません.' }
+        format.json { render :show, status: :created, location: @user }
       else
-        format.html { render :edit }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        if @user.update(user_params)
+          format.html { redirect_to @user, notice: 'User was successfully updated.' }
+          format.json { render :show, status: :ok, location: @user }
+        else
+          format.html { render :edit }
+          format.json { render json: @user.errors, status: :unprocessable_entity }
+        end
       end
+
     end
   end
 
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    @user.destroy
     respond_to do |format|
-      format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
-      format.json { head :no_content }
+      if @current_user.id == @user.id
+        @user.destroy
+        format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to @user, notice: '他のユーザを削除することは変更できません.' }
+        format.json { render :show, status: :created, location: @user }
+      end
+
     end
   end
 
